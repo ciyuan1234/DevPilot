@@ -10,6 +10,20 @@
 - **AI Gateway**：统一接入 OpenAI / DeepSeek / Claude / Ollama，隔离模型实现
 - **Agent 架构**：平台能力与 Agent 能力解耦，首个官方 Agent 为 CodeExplainAgent
 
+## 项目结构
+
+```text
+DevPilot/
+├── backend/     # C++20 + Drogon 后端（CMake 构建，产物在 backend/build/）
+├── frontend/    # Vue3 + TS + Element Plus（规划中，暂无代码）
+├── agents/      # 官方 Agent 实现（首个为 CodeExplainAgent）
+├── deploy/      # Docker Compose 部署（规划中）
+└── docs/
+    ├── PRD-v1.0.md     # 产品需求文档
+    ├── SDDv- 1.0.md    # 系统设计文档
+    └── blogs/          # 开发复盘（按步骤编号，如 01-git-init-and-remote.md）
+```
+
 ## 快速开始
 
 前置依赖：CMake ≥ 3.20、g++（支持 C++20）、Drogon 框架。
