@@ -23,7 +23,8 @@ jobs:
             uuid-dev zlib1g-dev \
             libpq-dev libmysqlclient-dev \
             libboost-dev libboost-system-dev libboost-filesystem-dev \
-            libbrotli-dev libsqlite3-dev libhiredis-dev
+            libbrotli-dev libsqlite3-dev libhiredis-dev \
+            libyaml-cpp-dev
 
       - name: Configure
         run: cmake -S backend -B backend/build
