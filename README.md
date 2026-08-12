@@ -10,6 +10,36 @@
 - **AI Gateway**：统一接入 OpenAI / DeepSeek / Claude / Ollama，隔离模型实现
 - **Agent 架构**：平台能力与 Agent 能力解耦，首个官方 Agent 为 CodeExplainAgent
 
+## 技术栈
+
+| 层 | 技术 |
+|---|---|
+| 前端 | Vue3 + TypeScript + Element Plus |
+| 后端 | C++20 + Drogon |
+| 数据库 | MySQL + Redis |
+| 部署 | Docker Compose |
+| 模型接入 | OpenAI / DeepSeek / Claude / Ollama |
+
+## 架构
+
+平台能力与 Agent 能力**解耦**：平台负责用户、项目、文件、权限与模型管理；Agent 负责具体软件工程任务（PR Review / Debug / Code Explain 等）。
+
+```text
+Client (Vue3 + TS + Element Plus)
+   │
+Platform (用户 / 项目 / 文件 / 权限)
+   │
+Agent Manager (注册 / 配置 / 版本)
+   │
+Agent Runtime (创建实例 / 调度 / 资源限制)
+   │
+AI Gateway (模型选择 / 密钥管理 / Token 计费)
+   │
+Provider (OpenAI / DeepSeek / Claude / Ollama)
+```
+
+> AI Gateway 只负责模型决策，不做 Agent 调度；调度归 Agent Runtime。详细设计见 [SDD](docs/SDDv-%201.0.md)。
+
 ## 文档
 
 - [产品需求文档（PRD）](docs/PRD-v1.0.md)
