@@ -10,6 +10,29 @@
 - **AI Gateway**：统一接入 OpenAI / DeepSeek / Claude / Ollama，隔离模型实现
 - **Agent 架构**：平台能力与 Agent 能力解耦，首个官方 Agent 为 CodeExplainAgent
 
+## 快速开始
+
+前置依赖：CMake ≥ 3.20、g++（支持 C++20）、Drogon 框架。
+
+```bash
+cd backend
+cmake -S . -B build
+cmake --build build
+```
+
+运行服务（监听 `0.0.0.0:8080`）：
+
+```bash
+./build/devpilot-backend
+```
+
+验证（另开终端）：
+
+```bash
+curl http://localhost:8080/api/health
+# 期望输出：{"status":"ok"}
+```
+
 ## 技术栈
 
 | 层 | 技术 |
