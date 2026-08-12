@@ -32,5 +32,8 @@ jobs:
       - name: Build
         run: cmake --build backend/build
 
+      - name: Test
+        run: ctest --test-dir backend/build --output-on-failure
+
       - name: Smoke test (health check)
         run: bash scripts/smoke-test.sh

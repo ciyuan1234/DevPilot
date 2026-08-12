@@ -22,3 +22,28 @@ target_link_libraries(
     devpilot-backend
     PRIVATE Drogon::Drogon
 )
+
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/v1.15.2.zip
+)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+add_executable(test_util
+    tests/test_file_validate.cpp
+    src/util/file_validate.cpp
+)
+target_link_libraries(
+    test_util
+    PRIVATE gtest_main
+)
+target_include_directories(
+    test_util
+    PRIVATE src
+)
+
+include(GoogleTest)
+gtest_discover_tests(test_util)
