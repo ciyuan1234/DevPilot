@@ -15,7 +15,15 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++ libdrogon-dev
+          sudo apt-get install -y \
+            cmake g++ \
+            libdrogon-dev \
+            libtrantor-dev \
+            libjsoncpp-dev \
+            uuid-dev zlib1g-dev \
+            libpq-dev libmysqlclient-dev \
+            libboost-dev libboost-system-dev libboost-filesystem-dev \
+            libbrotli-dev libsqlite3-dev libhiredis-dev
 
       - name: Configure
         run: cmake -S backend -B backend/build
