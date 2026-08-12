@@ -15,6 +15,7 @@ DevPilot AI —— 可扩展的 AI 软件工程平台（MVP 阶段）。需求�
 - 代码在 WSL2（Ubuntu 24.04）里。**当前 shell 已可直接进入 WSL 内（Linux zsh）**，直接运行 cmake/g++/git 即可，不再需要 `wsl -e bash -c` 包裹；若将来回到 Windows PowerShell 侧，则所有 Linux 命令须用 `wsl -e bash -c "..."` 包裹。
 - 路径两种写法：WSL 内 `/home/dev/project/...`；Windows 侧 `\\wsl.localhost\Ubuntu-24.04\home\dev\project\...`。PowerShell 侧引号转义易踩坑：`$()` 需写 `\$()`、嵌套引号优先写临时脚本。
 - 后端依赖已装好：Drogon、jsoncpp、yaml-cpp、mysqlclient、CMake 3.28、g++。
+- 本机 MySQL 8.0 已运行（`sudo service mysql start`）。开发库 `devpilot`，专用账号 `devpilot/devpilot-dev`（仅本机，勿提交生产凭据）。socket 目录权限 700 导致普通用户连不上，**统一走 TCP**：`mysql -h 127.0.0.1 -P 3306 -u devpilot -pdevpilot-dev devpilot`。建表脚本 `backend/db/schema.sql`。
 
 ## 后端（backend/，C++20 + Drogon）
 
