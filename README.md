@@ -77,6 +77,18 @@ Provider (OpenAI / DeepSeek / Claude / Ollama)
 
 > AI Gateway 只负责模型决策，不做 Agent 调度；调度归 Agent Runtime。详细设计见 [SDD](docs/SDDv-%201.0.md)。
 
+## 路线图与边界
+
+V1（当前）按序推进：用户系统 → 项目管理 → 文件上传 → Agent Metadata → AI Gateway → 官方 Agent（CodeExplainAgent）。
+
+V1 明确**不做**：多 Agent 协作、Agent Marketplace、K8s / 多节点部署、第三方 Agent 运行。
+
+## 开发约定
+
+- **引导式开发**：功能开发先给方案与取舍，确认后再动手（见 AGENTS.md）
+- **复盘归档**：每完成一步，在 `docs/blogs/` 按编号写复盘博客
+- **CI 与测试框架**：尚未配置（企业标准待补项）
+
 ## 文档
 
 | 文档 | 说明 |
