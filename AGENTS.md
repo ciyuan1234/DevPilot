@@ -12,18 +12,21 @@ DevPilot AI —— 可扩展的 AI 软件工程平台（MVP 阶段）。需求�
 
 ## 环境（关键）
 
-- 代码在 WSL2（Ubuntu 24.04）里，但 shell 是 Windows PowerShell。**任何 Linux 命令都要用 `wsl -e bash -c "..."` 包裹**，不能直接调 cmake/make/curl。
-- 路径有两种写法：WSL 内 `/home/dev/project/...`；Windows 侧 `\\wsl.localhost\Ubuntu-24.04\home\dev\project\...`。
+- 代码在 WSL2（Ubuntu 24.04）里。**当前 shell 已可直接进入 WSL 内（Linux zsh）**，直接运行 cmake/g++/git 即可，不再需要 `wsl -e bash -c` 包裹；若将来回到 Windows PowerShell 侧，则所有 Linux 命令须用 `wsl -e bash -c "..."` 包裹。
+- 路径两种写法：WSL 内 `/home/dev/project/...`；Windows 侧 `\\wsl.localhost\Ubuntu-24.04\home\dev\project\...`。PowerShell 侧引号转义易踩坑：`$()` 需写 `\$()`、嵌套引号优先写临时脚本。
 - 后端依赖已装好：Drogon、jsoncpp、yaml-cpp、mysqlclient、CMake 3.28、g++。
 
 ## 后端（backend/，C++20 + Drogon）
 
-- 构建：`wsl -e bash -c "cd /home/dev/project/backend && cmake -S . -B build && cmake --build build"`
-- 运行：`wsl -e bash -c "/home/dev/project/backend/build/devpilot-backend"`，监听 `0.0.0.0:8080`
-- 验证：`curl http://localhost:8080/api/health`（当前唯一接口，返回 `{"status":"ok"}`，已验证）
-- 现状：仅一个 health handler（`backend/src/main.cpp`），其余均为规划。
-- `backend/CMakeLists.txt` 硬编码了 MySQL 路径但尚未链接 mysqlclient；真正接 MySQL 时需清理。
+- 构建：`cd /home/dev/project/backend && cmake -S . -B build && cmake --build build`
+- 测试：`cd /home/dev/project/backend && ctest --test-dir build --output-on-failure`（GoogleTest，CI 亦跑此命令）
+- 运行：`/home/dev/project/backend/build/devpilot-backend`，监听 `0.0.0.0:8080`
+- 验证：`curl http://localhost:8080/api/health`（返回 `{"status":"ok"}`）
+- 现状：health handler（`backend/src/main.cpp`）+ 文件名校验工具（`backend/src/util/`，有单测 `backend/tests/`），其余均为规划。
+- `backend/CMakeLists.txt` 硬编码了 MySQL 路径但尚未链接 mysqlclient；真正接 MySQL 时需清理。GoogleTest 用 FetchContent 拉 v1.15.2，首次配置需网络。
 - `backend/uploads/tmp` 是文件上传暂存目录（按 hash 分片），非代码，勿提交。
+- CI：`.github/workflows/ci.yml`（push/PR 触发：依赖安装 → 构建 → ctest → smoke test）。注意 `libdrogon-dev` 的 CMake 隐式依赖约 10 个开发包，契约见 `docs/blogs/03-ci-github-actions.md`。
+- `scripts/smoke-test.sh`：启动后端 + 断言 health 接口，本地与 CI 共用。
 
 ## 架构要点（来自 SDD，务必遵守）
 
