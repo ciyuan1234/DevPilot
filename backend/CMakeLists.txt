@@ -35,8 +35,10 @@ enable_testing()
 add_executable(test_util
     tests/test_file_validate.cpp
     tests/test_password_hash.cpp
+    tests/test_user_repository.cpp
     src/util/file_validate.cpp
     src/util/password_hash.cpp
+    src/auth/user_repository.cpp
 )
 target_link_libraries(
     test_util
