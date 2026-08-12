@@ -1,0 +1,13 @@
+# Build artifacts
+backend/build/
+CMakeFiles/
+
+# Uploaded files (runtime data, not source)
+backend/uploads/
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
