@@ -79,5 +79,9 @@ Provider (OpenAI / DeepSeek / Claude / Ollama)
 
 ## 文档
 
-- [产品需求文档（PRD）](docs/PRD-v1.0.md)
-- [系统设计文档（SDD）](docs/SDDv-%201.0.md)
+| 文档 | 说明 |
+|---|---|
+| [产品需求文档（PRD）](docs/PRD-v1.0.md) | 项目定位、MVP 功能范围、成功指标 |
+| [系统设计文档（SDD）](docs/SDDv-%201.0.md) | 分层架构、数据库设计、API 定义、安全设计 |
+| [开发复盘博客](docs/blogs/) | 按步骤编号的开发记录，用于复盘与知识沉淀 |
+| [AGENTS.md](AGENTS.md) | 开发协作规范（引导式开发 + 环境约定） |
