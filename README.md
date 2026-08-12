@@ -2,6 +2,8 @@
 
 > DevPilot AI —— 面向软件工程生命周期的 AI 平台，通过插件化 Agent 架构扩展 AI 能力。
 
+[![CI](https://github.com/ciyuan1234/DevPilot/actions/workflows/ci.yml/badge.svg)](https://github.com/ciyuan1234/DevPilot/actions/workflows/ci.yml)
+
 当前处于 **MVP 阶段**：后端脚手架已就绪（C++20 + Drogon），提供健康检查接口；前端与 Agent 能力建设中。
 
 ## 核心特性
