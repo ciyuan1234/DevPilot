@@ -16,11 +16,20 @@ find_package(Drogon CONFIG REQUIRED)
 
 add_executable(devpilot-backend
     src/main.cpp
+    src/util/file_validate.cpp
+    src/util/password_hash.cpp
+    src/auth/user_repository.cpp
+    src/auth/jwt.cpp
+    src/auth/auth_handlers.cpp
 )
 
 target_link_libraries(
     devpilot-backend
-    PRIVATE Drogon::Drogon
+    PRIVATE Drogon::Drogon argon2 jwt-cpp
+)
+target_include_directories(
+    devpilot-backend
+    PRIVATE src
 )
 
 include(FetchContent)
