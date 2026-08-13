@@ -30,19 +30,27 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+FetchContent_Declare(
+    jwt-cpp
+    URL https://github.com/Thalhammer/jwt-cpp/archive/refs/tags/v0.7.0.zip
+)
+FetchContent_MakeAvailable(jwt-cpp)
+
 enable_testing()
 
 add_executable(test_util
     tests/test_file_validate.cpp
     tests/test_password_hash.cpp
     tests/test_user_repository.cpp
+    tests/test_jwt.cpp
     src/util/file_validate.cpp
     src/util/password_hash.cpp
     src/auth/user_repository.cpp
+    src/auth/jwt.cpp
 )
 target_link_libraries(
     test_util
-    PRIVATE gtest_main argon2
+    PRIVATE gtest_main argon2 jwt-cpp
 )
 target_include_directories(
     test_util
