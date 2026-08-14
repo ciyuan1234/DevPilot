@@ -13,6 +13,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(MYSQL_INCLUDE_DIRS "/usr/include/mysql")
 set(MYSQL_LIBRARIES "/usr/lib/x86_64-linux-gnu/libmysqlclient.so")
 find_package(Drogon CONFIG REQUIRED)
+find_package(CURL REQUIRED)
 
 add_executable(devpilot-backend
     src/main.cpp
@@ -22,11 +23,13 @@ add_executable(devpilot-backend
     src/auth/mysql_user_repository.cpp
     src/auth/jwt.cpp
     src/auth/auth_handlers.cpp
+    src/gateway/gateway.cpp
+    src/gateway/gateway_handlers.cpp
 )
 
 target_link_libraries(
     devpilot-backend
-    PRIVATE Drogon::Drogon argon2 jwt-cpp ${MYSQL_LIBRARIES}
+    PRIVATE Drogon::Drogon argon2 jwt-cpp ${MYSQL_LIBRARIES} CURL::libcurl
 )
 target_include_directories(
     devpilot-backend
@@ -53,10 +56,12 @@ add_executable(test_util
     tests/test_password_hash.cpp
     tests/test_user_repository.cpp
     tests/test_jwt.cpp
+    tests/test_gateway.cpp
     src/util/file_validate.cpp
     src/util/password_hash.cpp
     src/auth/user_repository.cpp
     src/auth/jwt.cpp
+    src/gateway/gateway.cpp
 )
 target_link_libraries(
     test_util

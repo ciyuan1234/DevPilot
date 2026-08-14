@@ -6,10 +6,14 @@
 
 #include "auth/auth_handlers.h"
 #include "auth/mysql_user_repository.h"
+#include "gateway/fake_provider.h"
+#include "gateway/gateway.h"
+#include "gateway/gateway_handlers.h"
 
 namespace {
 
 std::shared_ptr<devpilot::auth::IUserRepository> g_user_repo;
+std::shared_ptr<devpilot::gateway::Gateway> g_gateway;
 std::string g_jwt_secret;
 
 std::string jwt_secret()
@@ -33,6 +37,17 @@ drogon::Task<drogon::HttpResponsePtr> do_register(drogon::HttpRequestPtr req)
 drogon::Task<drogon::HttpResponsePtr> do_login(drogon::HttpRequestPtr req)
 {
     return devpilot::auth::handle_login(req, g_user_repo, g_jwt_secret);
+}
+
+drogon::Task<drogon::HttpResponsePtr> do_chat(drogon::HttpRequestPtr req)
+{
+    return devpilot::gateway::handle_chat(req, g_gateway);
+}
+
+void do_providers(const drogon::HttpRequestPtr& req,
+                  std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+{
+    devpilot::gateway::handle_providers(req, std::move(callback), g_gateway);
 }
 
 } // namespace
@@ -62,10 +77,16 @@ int main()
             auto db = drogon::app().getDbClient("devpilot_db");
             g_user_repo = std::make_shared<devpilot::auth::MysqlUserRepository>(db);
             g_jwt_secret = jwt_secret();
+
+            // AI Gateway：注册 Provider。当前用 Fake（Mock）；Ollama 就绪后换成 OllamaProvider。
+            g_gateway = std::make_shared<devpilot::gateway::Gateway>();
+            g_gateway->register_provider(std::make_shared<devpilot::gateway::FakeProvider>());
         });
 
     drogon::app().registerHandler("/api/auth/register", &do_register);
     drogon::app().registerHandler("/api/auth/login", &do_login);
+    drogon::app().registerHandler("/api/gateway/chat", &do_chat);
+    drogon::app().registerHandler("/api/gateway/providers", &do_providers);
 
     drogon::app()
         .addListener("0.0.0.0", 8080)
