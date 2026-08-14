@@ -25,7 +25,7 @@ DevPilot AI —— 可扩展的 AI 软件工程平台（MVP 阶段）。需求�
 - 验证：`curl http://localhost:8080/api/health`（返回 `{"status":"ok"}`）
 - 一键实测：`bash scripts/verify-mysql.sh`（起 MySQL+后端→注册/登录/查库/查重）与 `bash scripts/verify-persist.sh`（重启后持久化验证）。MySQL 停止时先 `sudo service mysql start`。
 - 配置：`backend/config.json`（本机开发凭据，已 gitignore）；模板 `backend/config.example.json`。Drogon 的 `getDbClient` **必须在 `run()` 之后**（`registerBeginningAdvice` 回调里）调用，否则空壳 DbClient 崩溃——见 `docs/blogs/06-mysql-persistence.md`。
-- 现状：health handler（`backend/src/main.cpp`）+ 文件名校验工具（`backend/src/util/`，有单测 `backend/tests/`），其余均为规划。
+- 现状：用户系统（注册/登录/JWT + MySQL 持久化）、AI Gateway（IProvider 抽象 + FakeProvider + chat/providers API + JWT 鉴权）、项目管理（create/list + 多用户归属隔离）均已落地，带单测与一键验证脚本（`scripts/verify-mysql.sh` / `verify-gateway.sh` / `verify-project.sh`）；文件上传、Agent Metadata、官方 Agent、OllamaProvider 为规划。Ollama 因网络受限暂未安装（下载挂后台）。
 - `backend/CMakeLists.txt` 硬编码了 MySQL 路径但尚未链接 mysqlclient；真正接 MySQL 时需清理。GoogleTest 用 FetchContent 拉 v1.15.2，首次配置需网络。
 - `backend/uploads/tmp` 是文件上传暂存目录（按 hash 分片），非代码，勿提交。
 - CI：`.github/workflows/ci.yml`（push/PR 触发：依赖安装 → 构建 → ctest → smoke test）。注意 `libdrogon-dev` 的 CMake 隐式依赖约 10 个开发包，契约见 `docs/blogs/03-ci-github-actions.md`。
