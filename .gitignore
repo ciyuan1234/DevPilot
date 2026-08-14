@@ -8,6 +8,9 @@ backend/uploads/
 # IDE
 .vscode/
 
+# Local config (contains credentials)
+backend/config.json
+
 # OS
 .DS_Store
 Thumbs.db

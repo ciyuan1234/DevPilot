@@ -19,13 +19,14 @@ add_executable(devpilot-backend
     src/util/file_validate.cpp
     src/util/password_hash.cpp
     src/auth/user_repository.cpp
+    src/auth/mysql_user_repository.cpp
     src/auth/jwt.cpp
     src/auth/auth_handlers.cpp
 )
 
 target_link_libraries(
     devpilot-backend
-    PRIVATE Drogon::Drogon argon2 jwt-cpp
+    PRIVATE Drogon::Drogon argon2 jwt-cpp ${MYSQL_LIBRARIES}
 )
 target_include_directories(
     devpilot-backend
@@ -59,7 +60,7 @@ add_executable(test_util
 )
 target_link_libraries(
     test_util
-    PRIVATE gtest_main argon2 jwt-cpp
+    PRIVATE gtest_main argon2 jwt-cpp Drogon::Drogon
 )
 target_include_directories(
     test_util

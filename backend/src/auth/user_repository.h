@@ -6,6 +6,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <drogon/utils/coroutine.h>
+
 namespace devpilot::auth {
 
 struct UserRecord
@@ -17,28 +19,29 @@ struct UserRecord
 };
 
 // 用户存储层接口：业务代码只依赖此抽象，不关心底层是 MySQL 还是内存。
+// 方法返回 Task（协程），因为真实实现（MySQL）是异步的。
 class IUserRepository
 {
 public:
     virtual ~IUserRepository() = default;
 
     // 注册用户；用户名冲突时返回 std::nullopt。成功后返回新用户 id。
-    virtual std::optional<uint64_t> create_user(const std::string& username,
-                                                const std::string& password_hash) = 0;
+    virtual drogon::Task<std::optional<uint64_t>> create_user(const std::string& username,
+                                                              const std::string& password_hash) = 0;
 
-    virtual std::optional<UserRecord> find_by_username(const std::string& username) = 0;
+    virtual drogon::Task<std::optional<UserRecord>> find_by_username(const std::string& username) = 0;
 
-    virtual std::optional<UserRecord> find_by_id(uint64_t id) = 0;
+    virtual drogon::Task<std::optional<UserRecord>> find_by_id(uint64_t id) = 0;
 };
 
 // 内存实现：用于单测与演示分层，不持久化。
 class InMemoryUserRepository final : public IUserRepository
 {
 public:
-    std::optional<uint64_t> create_user(const std::string& username,
-                                        const std::string& password_hash) override;
-    std::optional<UserRecord> find_by_username(const std::string& username) override;
-    std::optional<UserRecord> find_by_id(uint64_t id) override;
+    drogon::Task<std::optional<uint64_t>> create_user(const std::string& username,
+                                                      const std::string& password_hash) override;
+    drogon::Task<std::optional<UserRecord>> find_by_username(const std::string& username) override;
+    drogon::Task<std::optional<UserRecord>> find_by_id(uint64_t id) override;
 
 private:
     struct Entry

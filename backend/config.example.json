@@ -1,0 +1,14 @@
+{
+    "db_clients": [
+        {
+            "name": "devpilot_db",
+            "rdbms": "mysql",
+            "host": "127.0.0.1",
+            "port": 3306,
+            "user": "REPLACE_WITH_DB_USER",
+            "password": "REPLACE_WITH_DB_PASSWORD",
+            "dbname": "devpilot",
+            "number_of_connection": 4
+        }
+    ]
+}

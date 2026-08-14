@@ -2,12 +2,12 @@
 
 namespace devpilot::auth {
 
-std::optional<uint64_t> InMemoryUserRepository::create_user(const std::string& username,
-                                                            const std::string& password_hash)
+drogon::Task<std::optional<uint64_t>> InMemoryUserRepository::create_user(
+    const std::string& username, const std::string& password_hash)
 {
     if (by_username_.contains(username))
     {
-        return std::nullopt; // 用户名冲突
+        co_return std::nullopt; // 用户名冲突
     }
 
     const uint64_t id = next_id_++;
@@ -19,27 +19,28 @@ std::optional<uint64_t> InMemoryUserRepository::create_user(const std::string& u
 
     by_username_.emplace(username, entry);
     by_id_.emplace(id, std::move(entry));
-    return id;
+    co_return id;
 }
 
-std::optional<UserRecord> InMemoryUserRepository::find_by_username(const std::string& username)
+drogon::Task<std::optional<UserRecord>> InMemoryUserRepository::find_by_username(
+    const std::string& username)
 {
     const auto it = by_username_.find(username);
     if (it == by_username_.end())
     {
-        return std::nullopt;
+        co_return std::nullopt;
     }
-    return it->second.record;
+    co_return it->second.record;
 }
 
-std::optional<UserRecord> InMemoryUserRepository::find_by_id(uint64_t id)
+drogon::Task<std::optional<UserRecord>> InMemoryUserRepository::find_by_id(uint64_t id)
 {
     const auto it = by_id_.find(id);
     if (it == by_id_.end())
     {
-        return std::nullopt;
+        co_return std::nullopt;
     }
-    return it->second.record;
+    co_return it->second.record;
 }
 
 } // namespace devpilot::auth

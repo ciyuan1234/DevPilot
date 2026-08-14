@@ -73,7 +73,7 @@ drogon::Task<drogon::HttpResponsePtr> handle_register(drogon::HttpRequestPtr req
     }
 
     const auto hash = util::hash_password(password);
-    const auto id = repo->create_user(username, hash);
+    const auto id = co_await repo->create_user(username, hash);
     if (!id.has_value())
     {
         co_return make_json_error(drogon::k409Conflict, "username already exists");
@@ -100,7 +100,7 @@ drogon::Task<drogon::HttpResponsePtr> handle_login(drogon::HttpRequestPtr req,
     const auto username = (*json)["username"].asString();
     const auto password = (*json)["password"].asString();
 
-    const auto user = repo->find_by_username(username);
+    const auto user = co_await repo->find_by_username(username);
     // 统一返回 401：不区分"用户不存在"与"密码错误"，防止用户名枚举
     if (!user.has_value() || !util::verify_password(password, user->password_hash))
     {

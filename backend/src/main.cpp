@@ -1,10 +1,11 @@
 #include <drogon/drogon.h>
+#include <drogon/orm/DbClient.h>
 
 #include <cstdlib>
 #include <memory>
 
 #include "auth/auth_handlers.h"
-#include "auth/user_repository.h"
+#include "auth/mysql_user_repository.h"
 
 namespace {
 
@@ -51,8 +52,17 @@ int main()
         }
     );
 
-    g_user_repo = std::make_shared<devpilot::auth::InMemoryUserRepository>();
-    g_jwt_secret = jwt_secret();
+    drogon::app().loadConfigFile("config.json");
+
+    // 注意：getDbClient 必须在框架 run 之后才可用（Drogon 契约）。
+    // 故在 registerBeginningAdvice 回调中初始化全局依赖。
+    drogon::app().registerBeginningAdvice(
+        []()
+        {
+            auto db = drogon::app().getDbClient("devpilot_db");
+            g_user_repo = std::make_shared<devpilot::auth::MysqlUserRepository>(db);
+            g_jwt_secret = jwt_secret();
+        });
 
     drogon::app().registerHandler("/api/auth/register", &do_register);
     drogon::app().registerHandler("/api/auth/login", &do_login);
