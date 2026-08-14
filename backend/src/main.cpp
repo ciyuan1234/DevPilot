@@ -41,13 +41,13 @@ drogon::Task<drogon::HttpResponsePtr> do_login(drogon::HttpRequestPtr req)
 
 drogon::Task<drogon::HttpResponsePtr> do_chat(drogon::HttpRequestPtr req)
 {
-    return devpilot::gateway::handle_chat(req, g_gateway);
+    return devpilot::gateway::handle_chat(req, g_gateway, g_jwt_secret);
 }
 
 void do_providers(const drogon::HttpRequestPtr& req,
                   std::function<void(const drogon::HttpResponsePtr&)>&& callback)
 {
-    devpilot::gateway::handle_providers(req, std::move(callback), g_gateway);
+    devpilot::gateway::handle_providers(req, std::move(callback), g_gateway, g_jwt_secret);
 }
 
 } // namespace

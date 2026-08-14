@@ -3,6 +3,7 @@
 #include <jsoncpp/json/json.h>
 #include <stdexcept>
 
+#include "auth/auth_guard.h"
 #include "gateway/gateway.h"
 
 namespace devpilot::gateway {
@@ -20,8 +21,14 @@ drogon::HttpResponsePtr make_json_error(drogon::HttpStatusCode code, const std::
 } // namespace
 
 drogon::Task<drogon::HttpResponsePtr> handle_chat(drogon::HttpRequestPtr req,
-                                                  std::shared_ptr<Gateway> gw)
+                                                  std::shared_ptr<Gateway> gw,
+                                                  const std::string& jwt_secret)
 {
+    if (!devpilot::auth::require_auth(req, jwt_secret).has_value())
+    {
+        co_return make_json_error(drogon::k401Unauthorized, "unauthorized");
+    }
+
     auto json = req->getJsonObject();
     if (json == nullptr || !json->isMember("provider"))
     {
@@ -69,10 +76,17 @@ drogon::Task<drogon::HttpResponsePtr> handle_chat(drogon::HttpRequestPtr req,
     }
 }
 
-void handle_providers(const drogon::HttpRequestPtr&,
+void handle_providers(const drogon::HttpRequestPtr& req,
                       std::function<void(const drogon::HttpResponsePtr&)>&& callback,
-                      std::shared_ptr<Gateway> gw)
+                      std::shared_ptr<Gateway> gw,
+                      const std::string& jwt_secret)
 {
+    if (!devpilot::auth::require_auth(req, jwt_secret).has_value())
+    {
+        callback(make_json_error(drogon::k401Unauthorized, "unauthorized"));
+        return;
+    }
+
     Json::Value body;
     for (const auto& name : gw->providers())
     {

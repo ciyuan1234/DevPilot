@@ -23,6 +23,7 @@ add_executable(devpilot-backend
     src/auth/mysql_user_repository.cpp
     src/auth/jwt.cpp
     src/auth/auth_handlers.cpp
+    src/auth/auth_guard.cpp
     src/gateway/gateway.cpp
     src/gateway/gateway_handlers.cpp
 )
@@ -57,10 +58,12 @@ add_executable(test_util
     tests/test_user_repository.cpp
     tests/test_jwt.cpp
     tests/test_gateway.cpp
+    tests/test_auth_guard.cpp
     src/util/file_validate.cpp
     src/util/password_hash.cpp
     src/auth/user_repository.cpp
     src/auth/jwt.cpp
+    src/auth/auth_guard.cpp
     src/gateway/gateway.cpp
 )
 target_link_libraries(

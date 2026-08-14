@@ -13,13 +13,17 @@ namespace devpilot::gateway {
 class Gateway;
 
 // POST /api/gateway/chat {provider, model, messages:[{role,content}]}
+// 需 Authorization: Bearer <token>（JWT 鉴权，401 语义）
 drogon::Task<drogon::HttpResponsePtr> handle_chat(drogon::HttpRequestPtr req,
-                                                  std::shared_ptr<Gateway> gw);
+                                                  std::shared_ptr<Gateway> gw,
+                                                  const std::string& jwt_secret);
 
 // GET /api/gateway/providers —— 查询可用模型能力（本版 Drogon 不支持同步返回式
 // handler，必须用"回调式"签名：void(const HttpRequestPtr&, std::function<void(const HttpResponsePtr&)>&&)）
+// 需 Authorization: Bearer <token>
 void handle_providers(const drogon::HttpRequestPtr&,
                       std::function<void(const drogon::HttpResponsePtr&)>&& callback,
-                      std::shared_ptr<Gateway> gw);
+                      std::shared_ptr<Gateway> gw,
+                      const std::string& jwt_secret);
 
 } // namespace devpilot::gateway
